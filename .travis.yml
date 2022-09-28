@@ -5,19 +5,19 @@ dist: xenial
 dotnet: 6.0.202
 branches:
   only:
-    - main
-#    - develop
-#script:
-#  - dotnet build
-#  - dotnet test
-before_script:
-  - chmod -R a+x scripts
+    - master
+#   - develop
 script:
-  - ./scripts/build.sh
-  - ./scripts/test.sh
-after_success:
-  - ./scripts/dockerize.sh
-notifications:
-  email:
-    on_success: always
-    on_failure: always
+  - dotnet build
+  - dotnet test
+# [START travis_deploy]
+deploy:
+  provider: gae
+  # Skip cleanup so api_key.py and vendored dependencies are still there
+  skip_cleanup: true
+  keyfile: traviscisept22-68926b0cbbf0.json
+  project: traviscisept22
+  version: service-demo
+  default: true
+  on:
+    all_branches: true
